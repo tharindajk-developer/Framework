@@ -1,0 +1,194 @@
+<div class="mainContent" >
+  <p-confirmDialog header="" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
+  <div style="height: 6px;">
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}" *ngIf="!loaded"></p-progressBar>
+  </div>
+
+  <div class="ui-g-12"></div>
+
+  <div class="row" [hidden]="!error" *ngIf="errorMessage">  
+    <div class="alert alert-danger alert-dismissible">  
+      <button type="button" class="close" data-dismiss="alert" (click)="close()">×</button>  
+      <strong>{{errorMessage}}</strong>  
+    </div>  
+  </div>   
+
+  <div class="row" [hidden]="!success" *ngIf="successMessage">  
+    <div class="alert alert-success alert-dismissible">  
+      <button type="button" class="close" data-dismiss="alert" (click)="close()">×</button>  
+      <strong>{{successMessage}}</strong>  
+    </div>  
+  </div>  
+
+  <div class="sub-topic">Account Details</div>
+  <div class="ui-g-12">
+  </div>
+</div>
+
+<div *ngIf="user.individualCustomer">
+  <div class="ui-g-4">
+    <b>Name : </b>{{user.individualCustomer.firstName}} {{user.individualCustomer.lastName}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Number : </b>{{user.individualCustomer.account.accountNo}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Balance : </b>{{user.individualCustomer.account.amount | number:'1.2-2' }}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Branch : </b>{{user.individualCustomer.account.branch.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>SSN/Passport : </b>{{user.individualCustomer.ssn_passport}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Gender : </b>{{user.individualCustomer.gender}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Email (User Name) : </b>{{user.userName}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Type : </b>{{user.individualCustomer.account.accountType.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Address : </b>{{user.address.line1}}, {{user.address.line2}}, {{user.address.city}}
+  </div>
+
+  <div class="ui-g-2" style="margin-top: 50px;" >
+    Amount <font style="color : red">*</font>
+  </div>
+  <div class="ui-g-4" style="margin-top: 50px;">
+    <input pInputText [(ngModel)]="tfrAmount" style="width: 90%" minlength=6 type="number"/>
+  </div>
+
+  <div class="ui-g-2" style="margin-top: 50px;" >
+    To Account <font style="color : red">*</font>
+  </div>
+  <div class="ui-g-4" style="margin-top: 50px;">
+    <input pInputText [(ngModel)]="toAccount" style="width: 90%" minlength=6 type="number"/>
+  </div>
+
+  <div style="margin-top: 25px; margin-bottom: 50px; margin-right: 35px; float: right; text-align: right; width: 96%">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" class="btn-Success" (click)="transfer()">Transfer</button>&nbsp;&nbsp;&nbsp;
+      <button type="submit" class="btn-Success" (click)="clear()">Clear</button>
+    </div>
+  </div>
+
+  <p-table #allUsersTable [columns]="cols"  [value]="user.individualCustomer.account.transactions" [lazy]="true"
+    (onLazyLoad)="fetchUsersLazy($event)" [paginator]="paginator" [rows]="15" [totalRecords]=user.individualCustomer.account.transactions.totalElements> 
+    <ng-template pTemplate="header" let-columns>      
+        <tr style="font-size: 17px; color: azure;">
+          <th style="width: 16%;">Reference</th>
+          <th style="width: 16%;">Amount</th>
+          <th style="width: 17%;">From Account</th>
+          <th style="width: 17%;">To Account</th>
+          <th style="width: 18%;">Date</th>
+          <th style="width: 14%;">Type</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-transaction let-i="rowIndex">
+        <tr style="font-size: 15px">
+          <td>{{transaction.transactionRef}}</td>
+          <td>{{transaction.transactionAmount | number:'1.2-2' }}</td>
+          <td>{{transaction.fromAcc}}</td>
+          <td>{{transaction.toAcc}}</td>
+          <td>{{ transaction.transactionDate | date:'medium' }}</td>
+          <td>{{transaction.transactionType}}</td>
+        </tr>
+      </ng-template>
+  </p-table>
+  <div *ngIf="!paginator" class ="norecord ">No Record Found </div>
+</div>
+
+<div *ngIf="user.corporateCustomer">
+
+  <div class="ui-g-4">
+    <b>Name : </b>{{user.corporateCustomer.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Number : </b>{{user.corporateCustomer.account.accountNo}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Balance : </b>{{user.corporateCustomer.account.amount | number:'1.2-2' }}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Branch : </b>{{user.corporateCustomer.account.branch.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Email (User Name) : </b>{{user.userName}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Type : </b>{{user.corporateCustomer.account.accountType.name}}
+  </div>
+
+  <div class="ui-g-5">
+    <b>Address : </b>{{user.address.line1}}, {{user.address.line2}}, {{user.address.city}}
+  </div>
+
+  <div class="ui-g-2" style="margin-top: 50px;" >
+    Amount <font style="color : red">*</font>
+  </div>
+  <div class="ui-g-4" style="margin-top: 50px;">
+    <input pInputText [(ngModel)]="tfrAmount" style="width: 90%" minlength=6 type="number"/>
+  </div>
+
+  <div class="ui-g-2" style="margin-top: 50px;" >
+    To Account <font style="color : red">*</font>
+  </div>
+  <div class="ui-g-4" style="margin-top: 50px;">
+    <input pInputText [(ngModel)]="toAccount" style="width: 90%" minlength=6 type="number"/>
+  </div>
+
+  <div style="margin-top: 25px; margin-bottom: 50px; margin-right: 35px; float: right; text-align: right; width: 96%">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" class="btn-Success" (click)="transfer()">Transfer</button>&nbsp;&nbsp;&nbsp;
+      <button type="submit" class="btn-Success" (click)="clear()">Clear</button>
+    </div>
+  </div>
+
+  <p-table #allUsersTable [columns]="cols"  [value]="user.corporateCustomer.account.transactions" [lazy]="true"
+    (onLazyLoad)="fetchUsersLazy($event)" [paginator]="paginator" [rows]="15" [totalRecords]=user.corporateCustomer.account.transactions.totalElements> 
+    <ng-template pTemplate="header" let-columns>      
+        <tr style="font-size: 17px; color: azure;">
+          <th style="width: 16%;">Reference</th>
+          <th style="width: 16%;">Amount</th>
+          <th style="width: 17%;">From Account</th>
+          <th style="width: 17%;">To Account</th>
+          <th style="width: 16%;">Date</th>
+          <th style="width: 16%;">Type</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-transaction let-i="rowIndex">
+        <tr style="font-size: 15px">
+          <td>{{transaction.transactionRef}}</td>
+          <td>{{transaction.transactionAmount | number:'1.2-2' }}</td>
+          <td>{{transaction.fromAcc}}</td>
+          <td>{{transaction.toAcc}}</td>
+          <td>{{transaction.transactionDate | date:'medium' }}</td>
+          <td>{{transaction.transactionType}}</td>
+        </tr>
+      </ng-template>
+  </p-table>
+  <div *ngIf="!paginator" class ="norecord ">No Record Found </div>
+</div>
+
+<div style="margin-top: 25px; margin-bottom: 50px; margin-right: 35px; float: right; text-align: right; width: 96%">
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="submit" class="btn-Success" (click)="export()">Export to PDF</button>&nbsp;&nbsp;&nbsp;
+  </div>
+</div>
+

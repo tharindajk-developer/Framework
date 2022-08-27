@@ -1,0 +1,46 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink="home" style="font-size: 22px;">ABC Bank</a>
+    </div>
+    <ul class="nav navbar-nav" routerLinkActive="active" style="font-size: 16px;">
+      <li *ngIf="authority === 'administrator'" class="nav-item">
+        <a class="nav-link" routerLink="staff">Staff</a>
+      </li>
+      <li *ngIf="authority === 'administrator'" class="nav-item">
+        <a class="nav-link" routerLink="accounttypes">Account Types</a>
+      </li>
+      <li *ngIf="authority === 'administrator'" class="nav-item">
+        <a class="nav-link" routerLink="branch">Branches</a>
+      </li>
+      <li *ngIf="authority === 'administrator'" class="nav-item">
+        <a class="nav-link" routerLink="roles">Roles</a>
+      </li>
+      <li *ngIf="authority === 'administrator'" class="nav-item">
+        <a class="nav-link" routerLink="departments">Departments</a>
+      </li>
+      <li *ngIf="authority === 'staff'" class="nav-item">
+        <a class="nav-link" routerLink="accounts">Individual Accounts</a>
+      </li>
+      <li *ngIf="authority === 'staff'" class="nav-item">
+        <a class="nav-link" routerLink="corporateaccounts">Corporate Accounts</a>
+      </li>
+      <li *ngIf="authority === 'customer'" class="nav-item">
+        <a class="nav-link" routerLink="customer">Account Details</a>
+      </li>
+      <li *ngIf="!authority" class="nav-item">
+        <a class="nav-link" routerLink="login">Login</a>
+      </li>
+      <li *ngIf="authority" class="nav-item">
+        <a class="nav-link" (click)="logout()" style="margin-left: 400px;" routerLink="home">Logout</a>
+      </li>
+      <li *ngIf="authority" class="nav-item">
+        <a class="nav-link">{{userName}}</a>
+      </li>
+    </ul>
+    
+  </div>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

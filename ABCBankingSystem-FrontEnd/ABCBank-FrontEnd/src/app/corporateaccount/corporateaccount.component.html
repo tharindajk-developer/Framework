@@ -1,0 +1,186 @@
+<div class="mainContent" >
+  <p-confirmDialog header="" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
+  <div style="height: 6px;">
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}" *ngIf="!loaded"></p-progressBar>
+  </div>
+
+  <div class="ui-g-12"></div>
+
+  <div class="row" [hidden]="!error" *ngIf="errorMessage">  
+    <div class="alert alert-danger alert-dismissible">  
+      <button type="button" class="close" data-dismiss="alert" (click)="close()">×</button>  
+      <strong>{{errorMessage}}</strong>  
+    </div>  
+  </div>   
+
+  <div class="row" [hidden]="!success" *ngIf="successMessage">  
+    <div class="alert alert-success alert-dismissible">  
+      <button type="button" class="close" data-dismiss="alert" (click)="close()">×</button>  
+      <strong>{{successMessage}}</strong>  
+    </div>  
+  </div>  
+
+  <div class="sub-topic">Corporate Accounts</div>
+  <div class="ui-g-12">
+
+  </div>
+  <div class="ui-g-12" style="padding-left: 10px;" *ngIf="!accountView">
+    <div class="ui-g-2">
+      Name <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4">
+        <input pInputText [(ngModel)]="corporateCustomer.name" style="width: 90%" minlength=6/>
+    </div>
+
+    <div class="ui-g-2">
+      Registration No <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4">
+        <input pInputText [(ngModel)]="corporateCustomer.regNo" style="width: 90%" minlength=6/>
+    </div>
+
+    <div class="ui-g-2">
+      Email (User Name) <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4">
+      <input pInputText [(ngModel)]="user.userName" style="width: 90%" minlength=6/>
+    </div>
+
+    <div class="ui-g-2">
+      Account Type <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4" >
+      <select name="accountType" style="width: 90%; height:37px" (change)="selectAccountTypeChange($event)"> 
+        <option [ngValue]="undefined" hidden>Select Account Type</option>
+        <option *ngFor="let accountType of accountTypeSelectItems" [value]="accountTypeSelectItem">{{accountType.name}}</option> 
+      </select> 
+    </div>
+
+    <div class="ui-g-2">
+      Address Line 1 <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4" >
+      <input pInputText [(ngModel)]="address.line1" style="width: 90%" minlength=6/>
+    </div>
+
+    <div class="ui-g-2">
+      Address Line 2 <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4">
+      <input pInputText [(ngModel)]="address.line2" style="width: 90%" minlength=6/>
+    </div>
+   
+    <div class="ui-g-2">
+      City <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4">
+      <input pInputText [(ngModel)]="address.city" style="width: 90%" minlength=6/>
+    </div>
+
+    <div class="ui-g-2">
+      Branch <font style="color : red">*</font>
+    </div>
+    <div class="ui-g-4" >
+      <select name="branch" style="width: 90%; height:37px" (change)="selectBranchChange($event)"> 
+        <option [ngValue]="undefined" hidden>Select Branch</option>
+        <option *ngFor="let branch of branchSelectItems" [value]="branchSelectItem">{{branch.name}}</option> 
+      </select> 
+    </div>
+
+  </div>
+
+  <div *ngIf="!accountView" style="margin-top: 25px; float: left; text-align: right; width: 96%">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" class="btn-dis" (click)="clear()">Clear</button> &nbsp;
+      <button type="submit" class="btn-Success" (click)="save()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="accountView">
+
+  <div class="ui-g-4">
+    <b>Name : </b>{{user.corporateCustomer.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Number : </b>{{user.corporateCustomer.account.accountNo}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Balance : </b>{{user.corporateCustomer.account.amount | number:'1.2-2' }}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Branch : </b>{{user.corporateCustomer.account.branch.name}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Email (User Name) : </b>{{user.userName}}
+  </div>
+
+  <div class="ui-g-4">
+    <b>Account Type : </b>{{user.corporateCustomer.account.accountType.name}}
+  </div>
+
+  <div class="ui-g-5">
+    <b>Address : </b>{{user.address.line1}}, {{user.address.line2}}, {{user.address.city}}
+  </div>
+
+  <div style="margin-top: 25px; float: left; text-align: right; width: 96%">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" class="btn-Success" (click)="closeAccountView()">Back</button>
+    </div>
+  </div>
+
+
+  <div class="ui-g-2" style="margin-top: 50px;" >
+    Amount <font style="color : red">*</font>
+  </div>
+  <div class="ui-g-4" style="margin-top: 50px;">
+    <input pInputText [(ngModel)]="saveWithdrawAmount" style="width: 90%" minlength=6 type="number"/>
+  </div>
+
+  <div style="margin-top: 25px; margin-left: 225px;  float: left; text-align: left; width: 96%">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" class="btn-Success" (click)="withdraw()">Withdraw</button>&nbsp;&nbsp;&nbsp;
+      <button type="submit" class="btn-Success" (click)="deposit()">Deposit</button>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="!accountView">
+  <p-table #allUsersTable [columns]="cols" *ngIf="allUsersResponse"  [value]="allUsersResponse.content" [lazy]="true"
+    (onLazyLoad)="fetchUsersLazy($event)" [paginator]="paginator" [rows]="15" [totalRecords]=allUsersResponse.totalElements [loading]="loading"> 
+    <ng-template pTemplate="header" let-columns>
+
+      
+        <tr style="font-size: 17px; color: azure;">
+          <th style="width: 12%;">Account No<input  size="10" pInputText type="text" (input)="allUsersTable.filter($event.target.value, 'name', 'equals')" style="width: 90%; color: black;"></th>
+          <th style="width: 20%;">Name</th>
+          <th style="width: 10%;">Account Type</th>
+          <th style="width: 10%;">Branch</th>
+          <th style="width: 6%;">Active</th>
+          <th style="width: 15%;">Created By</th>
+          <th style="width: 10%;text-align: center;">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user let-i="rowIndex">
+        <tr style="font-size: 15px" *ngIf="user.corporateCustomer">
+          <td>{{user.corporateCustomer.account.accountNo}}</td>
+          <td>{{user.corporateCustomer.name}}</td>
+          <td>{{user.corporateCustomer.account.accountType.name}}</td>
+          <td>{{user.corporateCustomer.account.branch.name}}</td>
+          <td *ngIf="user.active">Yes</td>
+          <td *ngIf="!user.active">No</td>
+          <td style="font-size: 14px;">{{user.createdBy}}</td>
+          <td style="text-align: center;">
+            <span (click)="viewAccount(user)" class="fas fa fa-user-edit" style="color:#05a012; font-size: 17px; cursor:pointer"></span>
+            &nbsp;&nbsp;&nbsp;<span (click)="delete(user)" class="fa fa-times-circle" style="color:#e60a0a; font-size: 17px; cursor:pointer"></span>               
+          </td>
+        </tr>
+      </ng-template>
+  </p-table>
+</div>
+<div *ngIf="!paginator" class ="norecord ">No Record Found </div>
